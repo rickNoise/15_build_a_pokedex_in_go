@@ -11,9 +11,8 @@ var commandMap map[string]cliCommand
 
 func main() {
 	var userConfig = config{
-		Next:                 "https://pokeapi.co/api/v2/location-area/?limit=20&offset=0",
-		Previous:             "",
-		ExplorationIncrement: 20,
+		Next:     "https://pokeapi.co/api/v2/location-area/?limit=20&offset=0",
+		Previous: "",
 	}
 
 	commandMap = map[string]cliCommand{

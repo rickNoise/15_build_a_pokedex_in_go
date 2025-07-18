@@ -25,11 +25,11 @@ type LocationAreasResponse struct {
 
 // GetLocationAreas pulls down number of locations areas from the API using the given "url".
 // Returns a slice of location area names, the Next url for the next page of results, and an error.
-func GetLocationAreas(url string, increment int) ([]string, string, string, error) {
+func GetLocationAreas(url string) ([]string, string, string, error) {
 	// if passed URL is empty, we haven't explored at all yet
 	// kick start with a search with 0 offset
 	if url == "" {
-		url = fmt.Sprintf("https://pokeapi.co/api/v2/location-area/?limit=%d&offset=0", increment)
+		return []string{}, "", "", errors.New("error: empty url string provided")
 	}
 
 	res, err := http.Get(url)

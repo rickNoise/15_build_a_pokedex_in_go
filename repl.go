@@ -20,7 +20,6 @@ func cleanInput(text string) []string {
 type config struct {
 	Next                 string
 	Previous             string
-	ExplorationIncrement int
 }
 
 // cliCommand represents a command that can be called by the user from the CLI.
@@ -51,7 +50,6 @@ func commandHelp(userConfig *config) error {
 func commandExplore(userConfig *config) error {
 	locationSlice, nextURL, prevURL, err := pokeapi.GetLocationAreas(
 		userConfig.Next,
-		userConfig.ExplorationIncrement,
 	)
 	if err != nil {
 		return fmt.Errorf("error: map command failed: %w", err)
@@ -76,7 +74,6 @@ func commandExploreBack(userConfig *config) error {
 
 	locationSlice, nextURL, prevURL, err := pokeapi.GetLocationAreas(
 		userConfig.Previous,
-		userConfig.ExplorationIncrement,
 	)
 	if err != nil {
 		return fmt.Errorf("error: mapb command failed: %w", err)
