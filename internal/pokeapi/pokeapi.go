@@ -68,3 +68,116 @@ func GetLocationAreas(url string, locationCache *pokecache.Cache) ([]string, str
 
 	return LocationAreaNames, nextURL, prevURL, nil
 }
+
+type LocationAreaSpecificsResponse struct {
+	ID                   int    `json:"id"`
+	Name                 string `json:"name"`
+	GameIndex            int    `json:"game_index"`
+	EncounterMethodRates []struct {
+		EncounterMethod struct {
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"encounter_method"`
+		VersionDetails []struct {
+			Rate    int `json:"rate"`
+			Version struct {
+				Name string `json:"name"`
+				URL  string `json:"url"`
+			} `json:"version"`
+		} `json:"version_details"`
+	} `json:"encounter_method_rates"`
+	Location struct {
+		Name string `json:"name"`
+		URL  string `json:"url"`
+	} `json:"location"`
+	Names []struct {
+		Name     string `json:"name"`
+		Language struct {
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"language"`
+	} `json:"names"`
+	PokemonEncounters []struct {
+		Pokemon struct {
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"pokemon"`
+		VersionDetails []struct {
+			Version struct {
+				Name string `json:"name"`
+				URL  string `json:"url"`
+			} `json:"version"`
+			MaxChance        int `json:"max_chance"`
+			EncounterDetails []struct {
+				MinLevel        int           `json:"min_level"`
+				MaxLevel        int           `json:"max_level"`
+				ConditionValues []interface{} `json:"condition_values"`
+				Chance          int           `json:"chance"`
+				Method          struct {
+					Name string `json:"name"`
+					URL  string `json:"url"`
+				} `json:"method"`
+			} `json:"encounter_details"`
+		} `json:"version_details"`
+	} `json:"pokemon_encounters"`
+}
+
+type PokemonEncounter struct {
+	Pokemon struct {
+		Name string `json:"name"`
+		URL  string `json:"url"`
+	} `json:"pokemon"`
+	VersionDetails []struct {
+		Version struct {
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"version"`
+		MaxChance        int `json:"max_chance"`
+		EncounterDetails []struct {
+			MinLevel        int           `json:"min_level"`
+			MaxLevel        int           `json:"max_level"`
+			ConditionValues []interface{} `json:"condition_values"`
+			Chance          int           `json:"chance"`
+			Method          struct {
+				Name string `json:"name"`
+				URL  string `json:"url"`
+			} `json:"method"`
+		} `json:"encounter_details"`
+	} `json:"version_details"`
+}
+
+func GetPokemonInArea(areaName string, locationCache *pokecache.Cache) ([]PokemonEncounter, error) {
+	url := "https://pokeapi.co/api/v2/location-area/" + areaName
+
+	results, foundInCache := locationCache.Get(url)
+	if !foundInCache {
+		fmt.Println("Not found in cache, calling API...")
+		res, err := http.Get(url)
+		if err != nil {
+			return nil, fmt.Errorf("error: Could not get details for area %v", areaName)
+		}
+		defer res.Body.Close()
+
+		results, err = io.ReadAll(res.Body)
+		if err != nil {
+			return nil, errors.New("error: could not read response body")
+		}
+
+		locationCache.Add(url, results)
+	} else {
+		fmt.Println("Using cache...")
+	}
+
+	var LocationAreaSpecificResponseData LocationAreaSpecificsResponse
+	err := json.Unmarshal(results, &LocationAreaSpecificResponseData)
+	if err != nil {
+		return nil, errors.New("error: could not Unmarshall results from res Reader")
+	}
+
+	var PokemonEncounters []PokemonEncounter
+	for _, item := range LocationAreaSpecificResponseData.PokemonEncounters {
+		PokemonEncounters = append(PokemonEncounters, item)
+	}
+
+	return PokemonEncounters, nil
+}

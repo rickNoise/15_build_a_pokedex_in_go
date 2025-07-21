@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -29,7 +30,7 @@ type cliCommand struct {
 	name        string
 	description string
 	// callback takes userConfig and user prompt, split into words
-	callback    func(*config, []string) error
+	callback func(*config, []string) error
 }
 
 func commandExit(userConfig *config, userPrompt []string) error {
@@ -66,7 +67,6 @@ func commandMap(userConfig *config, userPrompt []string) error {
 	for _, location := range locationSlice {
 		fmt.Println(location)
 	}
-
 	return nil
 }
 
@@ -91,6 +91,22 @@ func commandMapBack(userConfig *config, userPrompt []string) error {
 	for _, location := range locationSlice {
 		fmt.Println(location)
 	}
+	return nil
+}
 
+func commandExplore(userConfig *config, userPrompt []string) error {
+	if len(userPrompt) < 2 {
+		return errors.New("You must provide an area to explore after the \"explore\" command.\nE.g. \"explore <area name>\"")
+	}
+	userProvidedAreaName := userPrompt[1]
+
+	pokemonInAreaSlice, err := pokeapi.GetPokemonInArea(userProvidedAreaName, userConfig.LocationCache)
+	if err != nil {
+		return errors.New("error: problem getting Pokemon in area")
+	}
+
+	for _, pokemon := range pokemonInAreaSlice {
+		fmt.Printf(" - %s\n", pokemon.Pokemon.Name)
+	}
 	return nil
 }

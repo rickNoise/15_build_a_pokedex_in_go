@@ -15,7 +15,7 @@ var commandMapper map[string]cliCommand
 func main() {
 	locationCache, err := pokecache.NewCache(5 * time.Second)
 	if err != nil {
-		fmt.Print(fmt.Errorf("probably initialising locationCache in userConfig: %w", err))
+		fmt.Print(fmt.Errorf("probably initialising cache in userConfig: %w", err))
 	}
 	var userConfig = &config{
 		Next:          "https://pokeapi.co/api/v2/location-area/?limit=20&offset=0",
@@ -43,6 +43,11 @@ func main() {
 			name:        "mapb",
 			description: "Go back the way you came. Displays the previous 20 locations shown by a \"Map\" command.",
 			callback:    commandMapBack,
+		},
+		"explore": {
+			name:        "explore",
+			description: "Explore an area for Pokemon by typing \"explore\" followed by the name of the area you'd like the explore.\nThe area name must be from a list shown by the \"map\" command.",
+			callback:    commandExplore,
 		},
 	}
 
