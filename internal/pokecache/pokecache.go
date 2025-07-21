@@ -87,7 +87,7 @@ func (c *Cache) reapLoop() {
 	ticker := time.NewTicker(c.interval)
 	defer ticker.Stop()
 
-	fmt.Printf("reapLoop started with interval: %v\n", c.interval)
+	// fmt.Printf("reapLoop started with interval: %v\n", c.interval)
 
 	for {
 		select {
@@ -97,7 +97,7 @@ func (c *Cache) reapLoop() {
 			currTime := time.Now()
 			for key, cacheEntry := range c.cacheMap {
 				if currTime.Sub(cacheEntry.createdAt) >= c.interval {
-					fmt.Println("deleting cache entry...")
+					// fmt.Println("deleting cache entry...")
 					delete(c.cacheMap, key)
 				}
 			}

@@ -44,13 +44,13 @@ func commandHelp(userConfig *config) error {
 
 	fmt.Println(welcomeLine)
 	fmt.Println(usageLine)
-	for _, value := range commandMap {
+	for _, value := range commandMapper {
 		fmt.Println(value.name+":", value.description)
 	}
 	return nil
 }
 
-func commandExplore(userConfig *config) error {
+func commandMap(userConfig *config) error {
 	locationSlice, nextURL, prevURL, err := pokeapi.GetLocationAreas(
 		userConfig.Next,
 		userConfig.LocationCache,
@@ -69,7 +69,7 @@ func commandExplore(userConfig *config) error {
 	return nil
 }
 
-func commandExploreBack(userConfig *config) error {
+func commandMapBack(userConfig *config) error {
 	// check to see if user is at the beginning of the exploration map.
 	if userConfig.Previous == "" {
 		fmt.Println("you're on the first page")
