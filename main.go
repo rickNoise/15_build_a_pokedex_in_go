@@ -48,7 +48,7 @@ func main() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 
-	commandMapper["help"].callback(userConfig)
+	commandMapper["help"].callback(userConfig, nil)
 	for isRunning := true; isRunning; {
 		var userPrompt []string
 		// fmt.Printf("Current user config:\n%+v\n", userConfig)
@@ -60,7 +60,7 @@ func main() {
 		userPrompt = cleanInput(scanner.Text())
 		userPromptFirstWord := userPrompt[0]
 		if userCommand, exists := commandMapper[userPromptFirstWord]; exists {
-			err := userCommand.callback(userConfig)
+			err := userCommand.callback(userConfig, userPrompt)
 			if err != nil {
 				fmt.Print(fmt.Errorf("error running command: %w", err))
 			}

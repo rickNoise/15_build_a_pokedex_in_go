@@ -28,17 +28,18 @@ type config struct {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	// callback takes userConfig and user prompt, split into words
+	callback    func(*config, []string) error
 }
 
-func commandExit(userConfig *config) error {
+func commandExit(userConfig *config, userPrompt []string) error {
 	userConfig.LocationCache.Stop()
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(userConfig *config) error {
+func commandHelp(userConfig *config, userPrompt []string) error {
 	welcomeLine := "Welcome to the Pokedex!"
 	usageLine := "Usage:\n"
 
@@ -50,7 +51,7 @@ func commandHelp(userConfig *config) error {
 	return nil
 }
 
-func commandMap(userConfig *config) error {
+func commandMap(userConfig *config, userPrompt []string) error {
 	locationSlice, nextURL, prevURL, err := pokeapi.GetLocationAreas(
 		userConfig.Next,
 		userConfig.LocationCache,
@@ -69,7 +70,7 @@ func commandMap(userConfig *config) error {
 	return nil
 }
 
-func commandMapBack(userConfig *config) error {
+func commandMapBack(userConfig *config, userPrompt []string) error {
 	// check to see if user is at the beginning of the exploration map.
 	if userConfig.Previous == "" {
 		fmt.Println("you're on the first page")
