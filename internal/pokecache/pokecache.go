@@ -92,7 +92,7 @@ func (c *Cache) reapLoop() {
 	for {
 		select {
 		case <-ticker.C:
-			fmt.Printf("reapLoop 'Tick!' on Cache %v\n", c)
+			// fmt.Println("reapLoop Tick!")
 			c.mu.Lock()
 			currTime := time.Now()
 			for key, cacheEntry := range c.cacheMap {

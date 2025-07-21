@@ -5,14 +5,22 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
+
+	"github.com/rickNoise/15_build_a_pokedex_in_go/internal/pokecache"
 )
 
 var commandMap map[string]cliCommand
 
 func main() {
+	locationCache, err := pokecache.NewCache(5 * time.Second)
+	if err != nil {
+		fmt.Print(fmt.Errorf("probably initialising locationCache in userConfig: %w", err))
+	}
 	var userConfig = config{
-		Next:     "https://pokeapi.co/api/v2/location-area/?limit=20&offset=0",
-		Previous: "",
+		Next:          "https://pokeapi.co/api/v2/location-area/?limit=20&offset=0",
+		Previous:      "",
+		LocationCache: locationCache,
 	}
 
 	commandMap = map[string]cliCommand{
@@ -43,7 +51,7 @@ func main() {
 	for isRunning := true; isRunning; {
 		var userPrompt []string
 		fmt.Printf("Current user config:\n%+v\n", userConfig)
-		fmt.Print("Pokedex > ")
+		fmt.Printf("\nPokedex > ")
 		if !scanner.Scan() {
 			fmt.Println("error parsing user input")
 			log.Fatal(1)
