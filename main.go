@@ -10,12 +10,15 @@ import (
 	"github.com/rickNoise/15_build_a_pokedex_in_go/internal/pokecache"
 )
 
-var commandMapper map[string]cliCommand
+/* CONSTANTS */
+const CACHE_LIFE_IN_SECONDS = 60
+
+var commandMapper map[string]cliCommand // have to initialise here or compiler complains
 
 func main() {
-	locationCache, err := pokecache.NewCache(5 * time.Second)
+	locationCache, err := pokecache.NewCache(CACHE_LIFE_IN_SECONDS * time.Second)
 	if err != nil {
-		fmt.Print(fmt.Errorf("probably initialising cache in userConfig: %w", err))
+		fmt.Print(fmt.Errorf("problem initialising cache in userConfig: %w", err))
 	}
 	var userConfig = &config{
 		Next:          "https://pokeapi.co/api/v2/location-area/?limit=20&offset=0",
