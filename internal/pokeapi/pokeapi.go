@@ -3,16 +3,11 @@ package pokeapi
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 )
 
-// PokePrint is a function for testing the internal package import is working.
-func PokePrint() {
-	fmt.Println("pokeapi internal package test print...")
-}
-
+// struct to capture json response from GetLocationAreas
 type LocationAreasResponse struct {
 	Count    int     `json:"count"`
 	Next     string  `json:"next"`
