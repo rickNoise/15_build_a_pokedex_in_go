@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/rickNoise/15_build_a_pokedex_in_go/internal/pokeapi"
 	"github.com/rickNoise/15_build_a_pokedex_in_go/internal/pokecache"
 )
 
@@ -24,6 +25,7 @@ func main() {
 		Next:          "https://pokeapi.co/api/v2/location-area/?limit=20&offset=0",
 		Previous:      "",
 		LocationCache: locationCache,
+		Pokedex:       make(map[string]pokeapi.Pokemon),
 	}
 
 	commandMapper = map[string]cliCommand{
@@ -51,6 +53,11 @@ func main() {
 			name:        "explore",
 			description: "Explore an area for Pokemon. e.g. \"explore <area name>\". Find area names by using \"map\" first.",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Try to catch a Pokemon. e.g. \"catch <pokemon name>\". Use \"explore\" command to find Pokemon names.",
+			callback:    commandCatch,
 		},
 	}
 

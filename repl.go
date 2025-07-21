@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"os"
 	"strings"
 
@@ -23,6 +24,7 @@ type config struct {
 	Next          string
 	Previous      string
 	LocationCache *pokecache.Cache
+	Pokedex       map[string]pokeapi.Pokemon // violating clean architecture
 }
 
 // cliCommand represents a command that can be called by the user from the CLI.
@@ -108,5 +110,42 @@ func commandExplore(userConfig *config, userPrompt []string) error {
 	for _, pokemon := range pokemonInAreaSlice {
 		fmt.Printf(" - %s\n", pokemon.Pokemon.Name)
 	}
+	return nil
+}
+
+func commandCatch(userConfig *config, userPrompt []string) error {
+	if len(userPrompt) < 2 {
+		return errors.New("you must provide an pokemon name after the \"catch\" command")
+	}
+	userProvidedPokemonName := userPrompt[1]
+
+	if _, ok := userConfig.Pokedex[userProvidedPokemonName]; ok {
+		return fmt.Errorf("you already have %s in your Pokedex", userProvidedPokemonName)
+	}
+
+	fmt.Printf("Throwing a Pokeball at %s...\n", userProvidedPokemonName)
+
+	PokemonDetails, err := pokeapi.GetPokemonDetails(userProvidedPokemonName, userConfig.LocationCache)
+	if err != nil {
+		return errors.New("error: problem getting Pokemon details")
+	}
+
+	// The base experience gained for defeating this Pokémon (int).
+	pokemonBaseExperience := PokemonDetails.BaseExperience
+
+	// logic for determining if catch attempt is successful
+	baseExpCapped := min(pokemonBaseExperience, 400)
+	fmt.Printf("Base Experience: %d\n", baseExpCapped)
+
+	randChance := 30 * (rand.Intn(9) + 1)
+	fmt.Printf("randChance: %d\n", randChance)
+
+	if randChance > baseExpCapped {
+		fmt.Println(":) Pokemon caught!")
+		userConfig.Pokedex[userProvidedPokemonName] = PokemonDetails
+	} else {
+		fmt.Println(";( Pokemon got away!")
+	}
+
 	return nil
 }
