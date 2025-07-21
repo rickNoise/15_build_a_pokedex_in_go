@@ -26,27 +26,27 @@ func main() {
 	commandMapper = map[string]cliCommand{
 		"help": {
 			name:        "help",
-			description: "Displays a help message",
+			description: "Display a help message.",
 			callback:    commandHelp,
 		},
 		"exit": {
 			name:        "exit",
-			description: "Exit the Pokedex",
+			description: "Exit the Pokedex.",
 			callback:    commandExit,
 		},
 		"map": {
 			name:        "map",
-			description: "Explore the Pokemon world. Displays the next 20 locations.",
+			description: "Explore the map. Displays the next 20 area names.",
 			callback:    commandMap,
 		},
 		"mapb": {
 			name:        "mapb",
-			description: "Go back the way you came. Displays the previous 20 locations shown by a \"Map\" command.",
+			description: "Explore back the way you came. Displays the previous 20 area names.",
 			callback:    commandMapBack,
 		},
 		"explore": {
 			name:        "explore",
-			description: "Explore an area for Pokemon by typing \"explore\" followed by the name of the area you'd like the explore.\nThe area name must be from a list shown by the \"map\" command.",
+			description: "Explore an area for Pokemon. e.g. \"explore <area name>\". Find area names by using \"map\" first.",
 			callback:    commandExplore,
 		},
 	}

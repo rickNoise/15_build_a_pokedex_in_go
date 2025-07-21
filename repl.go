@@ -96,7 +96,7 @@ func commandMapBack(userConfig *config, userPrompt []string) error {
 
 func commandExplore(userConfig *config, userPrompt []string) error {
 	if len(userPrompt) < 2 {
-		return errors.New("You must provide an area to explore after the \"explore\" command.\nE.g. \"explore <area name>\"")
+		return errors.New("you must provide an area to explore after the \"explore\" command.\nE.g. \"explore <area name>\"")
 	}
 	userProvidedAreaName := userPrompt[1]
 
