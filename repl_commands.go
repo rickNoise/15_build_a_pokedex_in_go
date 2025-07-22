@@ -148,3 +148,14 @@ func commandInspect(userConfig *config, userPrompt []string) error {
 	}
 	return nil
 }
+
+func commandPokedex(userConfig *config, userPrompt []string) error {
+	if len(userConfig.Pokedex) == 0 {
+		fmt.Println("Pokedex is empty. You haven't caught any Pokemon yet.")
+		return nil
+	}
+	for _, p := range userConfig.Pokedex {
+		fmt.Println(" -", p.Name)
+	}
+	return nil
+}
