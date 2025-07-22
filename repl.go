@@ -149,3 +149,28 @@ func commandCatch(userConfig *config, userPrompt []string) error {
 
 	return nil
 }
+
+func commandInspect(userConfig *config, userPrompt []string) error {
+	if len(userPrompt) < 2 {
+		return errors.New("you must provide an pokemon name after the \"inspect\" command")
+	}
+	userProvidedPokemonName := userPrompt[1]
+
+	p, ok := userConfig.Pokedex[userProvidedPokemonName]
+	if !ok {
+		fmt.Printf("%s is not in your Pokedex. You must catch a Pokemon before you can inspect it.\n", userProvidedPokemonName)
+		return nil
+	}
+	fmt.Println("Name:", p.Name)
+	fmt.Println("Height:", p.Height)
+	fmt.Println("Weight:", p.Weight)
+	fmt.Println("Stats:")
+	for _, s := range p.Stats {
+		fmt.Printf("-%s: %d\n", s.Stat.Name, s.BaseStat)
+	}
+	fmt.Println("Types:")
+	for _, t := range p.Types {
+		fmt.Println("-", t.Type.Name)
+	}
+	return nil
+}

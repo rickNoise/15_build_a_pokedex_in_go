@@ -59,6 +59,11 @@ func main() {
 			description: "Try to catch a Pokemon. e.g. \"catch <pokemon name>\". Use \"explore\" command to find Pokemon names.",
 			callback:    commandCatch,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "See details about a Pokemon. e.g. \"inspect <pokemon name>\". You must catch a Pokemon before you can inspect it.",
+			callback:    commandInspect,
+		},
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)
