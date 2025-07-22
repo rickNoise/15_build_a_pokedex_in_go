@@ -11,7 +11,7 @@ HTTP client project for boot.dev.
 # Example Usage
 
 The first word you enter is interpreted as a command.
-Some commands use the next word a cli argument for the command.
+Some commands use the next word as a cli argument for the command.
 Type "help" to see available commands.
 
 1. "map" shows next 20 areas names. Use this to see a list of areas.
