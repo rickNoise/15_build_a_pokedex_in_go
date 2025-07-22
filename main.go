@@ -1,37 +1,21 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
-	"os"
-	"time"
-
-	"github.com/rickNoise/15_build_a_pokedex_in_go/internal/pokeapi"
-	"github.com/rickNoise/15_build_a_pokedex_in_go/internal/pokecache"
 )
 
 /* CONSTANTS */
 const CACHE_LIFE_IN_SECONDS = 60
 
 func main() {
-	locationCache, err := pokecache.NewCache(CACHE_LIFE_IN_SECONDS * time.Second)
-	if err != nil {
-		fmt.Print(fmt.Errorf("problem initialising cache in userConfig: %w", err))
-	}
-	var userConfig = &config{
-		Next:          "https://pokeapi.co/api/v2/location-area/?limit=20&offset=0",
-		Previous:      "",
-		LocationCache: locationCache,
-		Pokedex:       make(map[string]pokeapi.Pokemon),
-	}
-
-	scanner := bufio.NewScanner(os.Stdin)
+	// initalise repl environment
+	userConfig, scanner := ReplInitialisation()
 
 	// show help on start
 	GetCommands()["help"].callback(userConfig, nil)
 
-	// cli loop
+	// cli user input loop
 	for isRunning := true; isRunning; {
 		var userPrompt []string
 		fmt.Printf("\nPokedex > ")

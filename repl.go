@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"math/rand"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/rickNoise/15_build_a_pokedex_in_go/internal/pokeapi"
 	"github.com/rickNoise/15_build_a_pokedex_in_go/internal/pokecache"
@@ -15,6 +17,23 @@ import (
 func cleanInput(text string) []string {
 	textTrimmedToLower := strings.ToLower(strings.TrimSpace(text))
 	return strings.Fields(textTrimmedToLower)
+}
+
+func ReplInitialisation() (*config, *bufio.Scanner) {
+	locationCache, err := pokecache.NewCache(CACHE_LIFE_IN_SECONDS * time.Second)
+	if err != nil {
+		fmt.Print(fmt.Errorf("problem initialising cache in userConfig: %w", err))
+	}
+	var userConfig = &config{
+		Next:          "https://pokeapi.co/api/v2/location-area/?limit=20&offset=0",
+		Previous:      "",
+		LocationCache: locationCache,
+		Pokedex:       make(map[string]pokeapi.Pokemon),
+	}
+
+	scanner := bufio.NewScanner(os.Stdin)
+
+	return userConfig, scanner
 }
 
 // config represents the user's state when exploring the Pokemon universe.
