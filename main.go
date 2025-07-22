@@ -17,13 +17,17 @@ func main() {
 
 	// cli user input loop
 	for isRunning := true; isRunning; {
-		var userPrompt []string
 		fmt.Printf("\nPokedex > ")
 		if !scanner.Scan() {
 			fmt.Println("error parsing user input")
 			log.Fatal(1)
 		}
-		userPrompt = cleanInput(scanner.Text())
+
+		userPrompt := cleanInput(scanner.Text())
+		if len(userPrompt) == 0 {
+			continue
+		}
+
 		userCommand := userPrompt[0]
 		if userCommand, exists := GetCommands()[userCommand]; exists {
 			err := userCommand.callback(userConfig, userPrompt)
