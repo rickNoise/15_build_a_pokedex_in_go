@@ -35,6 +35,46 @@ type cliCommand struct {
 	callback func(*config, []string) error
 }
 
+func GetCommands() map[string]cliCommand {
+	return map[string]cliCommand{
+		"help": {
+			name:        "help",
+			description: "Display a help message.",
+			callback:    commandHelp,
+		},
+		"exit": {
+			name:        "exit",
+			description: "Exit the Pokedex.",
+			callback:    commandExit,
+		},
+		"map": {
+			name:        "map",
+			description: "Explore the map. Displays the next 20 area names.",
+			callback:    commandMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Explore back the way you came. Displays the previous 20 area names.",
+			callback:    commandMapBack,
+		},
+		"explore": {
+			name:        "explore",
+			description: "Explore an area for Pokemon. e.g. \"explore <area name>\". Find area names by using \"map\" first.",
+			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Try to catch a Pokemon. e.g. \"catch <pokemon name>\". Use \"explore\" command to find Pokemon names.",
+			callback:    commandCatch,
+		},
+		"inspect": {
+			name:        "inspect",
+			description: "See details about a Pokemon. e.g. \"inspect <pokemon name>\". You must catch a Pokemon before you can inspect it.",
+			callback:    commandInspect,
+		},
+	}
+}
+
 func commandExit(userConfig *config, userPrompt []string) error {
 	userConfig.LocationCache.Stop()
 	fmt.Println("Closing the Pokedex... Goodbye!")
@@ -48,7 +88,7 @@ func commandHelp(userConfig *config, userPrompt []string) error {
 
 	fmt.Println(welcomeLine)
 	fmt.Println(usageLine)
-	for _, value := range commandMapper {
+	for _, value := range GetCommands() {
 		fmt.Println(value.name+":", value.description)
 	}
 	return nil
